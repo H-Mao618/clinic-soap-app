@@ -24,7 +24,7 @@ with col1:
 
  
    
- # 1. 基本資訊
+    # 1. 基本資訊
     
     st.subheader("基本資訊")
     
@@ -93,15 +93,22 @@ with col1:
         pe_tenderness = st.selectbox("Abdomen PE (觸診)", ["no tenderness", "tenderness (+)", "rebounding tenderness (+)"])
     pe_bowel_sound = st.selectbox("Bowel sound (腸音)", ["normo-active BS", "hyper-active BS", "hypo-active BS"])  
 
-    # 4. Assessment & Plan (診斷與計畫)
-    
-    st.subheader("Assessment & Plan (A/P)")
-    
-    diagnosis = st.text_input("初步診斷 (Dx)", value="Acute Upper Respiratory Infection")
-    
-    plan_med = st.checkbox("開立處方藥物 (Medication)")
-    
-    plan_education = st.checkbox("衛教 (Rest, hydration)")
+    # 4. Sonography exam
+    st.divider()
+    st.subheader("📸 超音波檢查結果 (Sono)")
+    do_sono = st.checkbox("執行超音波檢查(Performed Sonography)")
+
+    sono_type = "Abdominal Sonography"
+    sono_findings = []
+    if do_sono:
+        sono_type = st.selectbox("超音波項目", ["Abdominal Sono", "Thyroid Sono", "Breast Sono"])
+
+        # 根據不同的超音波項目，給予對應的常用 findings 勾選
+        if sono_type == "Abdominal Sono":
+            if st.checkbox("Fatty liver (脂肪肝)"): sono_findings.append("Mild fatty liver noted.")
+            if st.checkbox("Gallstone (膽結石)"): sono_findings.append("A gallbladder stone about 1.2cm with acoustic shadow.")
+            if st.checkbox("GB wall thickening (膽囊壁變厚)"): sono_findings.append("Gallbladder wall thickening noted, acute cholecystitis cannot be ruled out.")
+            if st.checkbox("Renal stone (腎結石)"): sono_findings.append("Right renal stone noted.")
 
 
 
@@ -110,114 +117,97 @@ with col1:
 
 with col2:
     
-    st.header("📝 產出的英文病歷")
-    
-    st.write("您可以直接複製右側文字貼回 HIS 系統：")
-    
-    
+    st.header("📝 產出報告區")
 
-    # 根據左側的勾選結果，用 Python 邏輯組合字串
-    
-    soap_text = ""
-    
-    
+    # 🌟 建立兩個分頁：一個放 SOAP，一個放 Sono 報告
+    tab_soap, tab_sono = st.tabs(["📄 門診病歷 (SOAP)", "📊 超音波報告 (Sono Report)"])
+   
+    # --- Tab 1: SOAP 病歷組合邏輯 ---
+    with tab_soap:
+        st.write("您可以直接複製下方文字貼回 HIS 的 SOAP 欄位：")
+        soap_text = ""
 
     # S 區塊
     
-    soap_text += f"[Subjective]\n"
+        soap_text += f"[Subjective]\n"
     
-    soap_text += f"This {age}-year-old {gender} presented with "
+        soap_text += f"This {age}-year-old {gender} presented with "
     
-    symptoms = []
+        symptoms = []
     
-    if cc_cough: symptoms.append("cough")
+        if cc_cough: symptoms.append("cough")
     
-    if cc_fever: symptoms.append(f"fever (BT: {bt}°C)")
+        if cc_fever: symptoms.append(f"fever (BT: {bt}°C)")
     
-    if cc_dyspnea: symptoms.append("dyspnea")
+        if cc_dyspnea: symptoms.append("dyspnea")
     
     
 
     # 處理腹痛的文字邏輯：如果有選位置，就直接用位置的字串
     
-    if cc_abd_pain and abd_location:
+        if cc_abd_pain and abd_location:
         
-        symptoms.extend(abd_location)
+            symptoms.extend(abd_location)
     
     
-    elif cc_abd_pain and not abd_location:
-        symptoms.append("abdominal pain")
-    if symptoms:
+        elif cc_abd_pain and not abd_location:
+            symptoms.append("abdominal pain")
+        if symptoms:
         
-        soap_text += ", ".join(symptoms) + ".\n"
+            soap_text += ", ".join(symptoms) + ".\n"
     
-    else:
+        else:
         
-        soap_text += "no special discomfort today.\n"
+            soap_text += "no special discomfort today.\n"
         
-    
-
-    soap_text += "\n"
+        soap_text += "\n"
 
     # O 區塊
     
-    soap_text += f"[Objective]\n"
+        soap_text += f"[Objective]\n"
     
-
-    if vital_sign:
+        if vital_sign:
         
-        soap_text += f"- Vital signs: {vital_sign}\n"
+            soap_text += f"- Vital signs: {vital_sign}\n"
 
-    if pe_throat:
+        if pe_throat:
         
-        soap_text += "- Throat: Throat injection (+)\n"
+            soap_text += "- Throat: Throat injection (+)\n"
     
-    else:
+        else:
         
-        soap_text += "- Throat: Not injected\n"
+            soap_text += "- Throat: Not injected\n"
     
-    soap_text += f"- Chest: Breathing sound: {pe_breathing}\n"
+        soap_text += f"- Chest: Breathing sound: {pe_breathing}\n"
     
     
-
     # 如果有腹痛，在 Objective 也自動補上腹部觸診結果
     
-    if cc_abd_pain:
+        if cc_abd_pain:
         
-        soap_text += f"- Abdomen: Soft, {pe_tenderness}, {pe_bowel_sound}\n"
+            soap_text += f"- Abdomen: Soft, {pe_tenderness}, {pe_bowel_sound}\n"
+      
+        soap_text += "\n"
     
-    
-
-    soap_text += "\n"
-    
-    
-
-    # A 區塊
-    
-    soap_text += f"[Assessment]\n"
-    
-    soap_text += f"- {diagnosis}\n\n"
-    
-    
-
-    # P 區塊
-    
-    soap_text += f"[Plan]\n"
-    
-    plans = []
-    
-    if plan_med: plans.append("Medication prescribed.")
-    
-    if plan_education: plans.append("Patient was educated about lifestyle modifications, adequate hydration, and rest.")
-    
-    if plans:
+    # --- Tab 2: 超音波報告組合邏輯 ---
+    with tab_sono:
+        st.write("您可以直接複製下方文字貼回 HIS 的 Echo 報告欄位：")
         
-        soap_text += "\n".join([f"- {p}" for p in plans]) + "\n"
-    
-    else:
-        
-        soap_text += "- Routine follow up.\n"
-
+        if do_sono:
+            sono_text = f"=== {sono_type} Report ===\n"
+            sono_text += f"Patient: {age}-year-old {gender}\n"
+            sono_text += f"Date of Exam: {st.date_input('檢查日期').strftime('%Y-%m-%d')}\n\n"
+            sono_text += "[Findings]\n"
+            
+            if sono_findings:
+                for finding in sono_findings:
+                    sono_text += f"- {finding}\n"
+            else:
+                sono_text += "- No remarkable abnormality noted.\n"
+        else:
+            sono_text = "（左側未勾選「執行超音波檢查」，故不生成報告）"
+            
+        st.text_area("Sono Report Output", value=sono_text, height=450, key="sono_area")
     
 
     # 在網頁上呈現一個方便複製的文字框
