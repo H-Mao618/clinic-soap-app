@@ -195,8 +195,6 @@ with col2:
         
         if do_sono:
             sono_text = f"=== {sono_type} Report ===\n"
-            sono_text += f"Patient: {age}-year-old {gender}\n"
-            sono_text += f"Date of Exam: {st.date_input('檢查日期').strftime('%Y-%m-%d')}\n\n"
             sono_text += "[Findings]\n"
             
             if sono_findings:
