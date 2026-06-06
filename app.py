@@ -114,20 +114,3 @@ with col2:
     soap_text += "\n"
     st.text_area("SOAP Output (可直接複製)", value=soap_text, height=400, key="soap_area_final")
         
-    # --- Tab 2: 超音波報告組合邏輯 ---
-    with tab_sono:
-        st.write("您可以直接複製下方文字貼回 HIS 的 Echo 報告欄位：")
-        
-        if do_sono:
-            sono_text = f"=== {sono_type} Report ===\n"
-            sono_text += "[Findings]\n"
-            
-            if sono_findings:
-                for finding in sono_findings:
-                    sono_text += f"- {finding}\n"
-            else:
-                sono_text += "- No remarkable abnormality noted.\n"
-        else:
-            sono_text = "（左側未勾選「執行超音波檢查」，故不生成報告）"
-            
-        st.text_area("Sono Report Output", value=sono_text, height=450, key="sono_area")
