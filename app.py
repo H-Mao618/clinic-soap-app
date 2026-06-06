@@ -1,67 +1,35 @@
 ﻿import streamlit as st
 
-
-
 # 設定網頁標題
-
 st.set_page_config(page_title="門診病歷快速生成器", layout="wide")
-
 st.title("🩺 門診病歷快速生成器 (SOAP)")
-
 st.caption("本機端單機運行，100% 確保病患隱私安全")
 
-
-
 # 使用 Streamlit 的左右分欄功能
-
 col1, col2 = st.columns([1, 1])
 
-
-
 with col1:
-   
     st.header("📋 症狀與檢查點選")
-
- 
    
     # 1. 基本資訊
-    
     st.subheader("基本資訊")
-    
     age = st.number_input("年齡", min_value=0, max_value=120, value=40)
-    
     gender = st.selectbox("性別", ["Male", "Female"])
- 
     vital_sign =  st.text_input("生命徵象", value="130/80, 70")
-  
-    
 
     # 2. Subjective (主訴與症狀)
-    
     st.subheader("Subjective (S)")
-    
     cc_cough = st.checkbox("Cough (咳嗽)")
-    
     cc_fever = st.checkbox("Fever (發燒)")
-    
     cc_dyspnea = st.checkbox("Dyspnea (呼吸困難)")
-    
-
     cc_abd_pain = st.checkbox("Abdominal pain (腹痛)")
  
-
     # 條件式連動：如果勾選腹痛，才顯示疼痛部位輸入框
-    
     abd_location = []
-    
     if cc_abd_pain:
-        
         abd_location = st.multiselect(
-            
             "請選擇腹痛具體位置(可多選)", 
-
             ["epigastric pain", "RUQ pain", "LUQ pain", "RLQ pain", "lower abd pain", "LLQ pain", "diffuse abd pain"]
-
         )
 
     # 條件式連動：如果勾選發燒，才顯示體溫輸入框
@@ -142,7 +110,6 @@ with col2:
         if cc_dyspnea: symptoms.append("dyspnea")
     
     
-
     # 處理腹痛的文字邏輯：如果有選位置，就直接用位置的字串
     
         if cc_abd_pain and abd_location:
