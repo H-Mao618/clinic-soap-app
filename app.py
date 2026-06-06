@@ -26,9 +26,9 @@ with col1:
     cc_abd_pain = st.checkbox("Abdominal pain (腹痛)")
     
     # 條件式連動：如果勾選「腹痛」，才顯示位置選擇
-    abd_location = ""
+    abd_location = []
     if cc_abd_pain:
-        abd_location = st.selectbox(
+        abd_location = st.multiselect(
             "請選擇腹痛具體位置", 
             ["epigastric pain", "RUQ pain", "LUQ pain", "RLQ pain", "lower abd pain", "LLQ pain", "diffuse abd pain"]
         )
