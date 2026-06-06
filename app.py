@@ -61,7 +61,9 @@ with col1:
     st.subheader("Sonography")
     do_sono = st.checkbox("Perform sonography")
     sono_date = st.date_input("檢查日期")
-    sono_date_str = sono_date.strftime('%Y-%m-%d')sono_type = []
+    sono_date_str = sono_date.strftime('%Y-%m-%d')
+    
+    sono_type = []
     if do_sono:
         sono_type = st.multiselect("Select Sono type", ["Abdominal sono", "Thyroid sono", "Breast sono"])
     
