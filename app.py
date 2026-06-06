@@ -8,31 +8,31 @@ st.caption("本機端單機運行，100% 確保病患隱私安全")
 # 使用 Streamlit 的左右分欄功能
 col1, col2 = st.columns([1, 1])
 
-# ==================== 左側欄位：臨床資料輸入 ====================
 with col1:
     st.header("📋 症狀與檢查點選")
-   
+    
     # 1. 基本資訊
     st.subheader("基本資訊")
     age = st.number_input("年齡", min_value=0, max_value=120, value=40)
     gender = st.selectbox("性別", ["Male", "Female"])
-    vital_sign = st.text_input("生命徵象", value="130/80, 70")
-
+    
     # 2. Subjective (主訴與症狀)
     st.subheader("Subjective (S)")
     cc_cough = st.checkbox("Cough (咳嗽)")
     cc_fever = st.checkbox("Fever (發燒)")
     cc_dyspnea = st.checkbox("Dyspnea (呼吸困難)")
+    
+    # 新增的 Abdominal pain 勾選框
     cc_abd_pain = st.checkbox("Abdominal pain (腹痛)")
- 
-    # 條件式連動：如果勾選腹痛，才顯示疼痛部位輸入框
-    abd_location = []
+    
+    # 條件式連動：如果勾選「腹痛」，才顯示位置選擇
+    abd_location = ""
     if cc_abd_pain:
-        abd_location = st.multiselect(
-            "請選擇腹痛具體位置(可多選)", 
+        abd_location = st.selectbox(
+            "請選擇腹痛具體位置", 
             ["epigastric pain", "RUQ pain", "LUQ pain", "RLQ pain", "lower abd pain", "LLQ pain", "diffuse abd pain"]
         )
-
+    
     # 條件式連動：如果勾選發燒，才顯示體溫輸入框
     bt = 36.5
     if cc_fever:
@@ -42,75 +42,74 @@ with col1:
     st.subheader("Objective (O)")
     pe_throat = st.checkbox("Throat: Infected/Injected (喉嚨紅腫)")
     pe_breathing = st.selectbox("Breathing Sound (呼吸音)", ["Clear", "Wheezing (喘鳴音)", "Rales (濕囉音)"])
-
+    
     # 這裡順便幫您加一個腹部理學檢查的連動，如果點腹痛，就預設跳出壓痛選項
     pe_tenderness = "no tenderness"
     if cc_abd_pain:
         pe_tenderness = st.selectbox("Abdomen PE (觸診)", ["no tenderness", "tenderness (+)", "rebounding tenderness (+)"])
-    pe_bowel_sound = st.selectbox("Bowel sound (腸音)", ["normo-active BS", "hyper-active BS", "hypo-active BS"])  
 
-    # 4. Sonography exam
-    st.divider()
-    st.subheader("📸 超音波檢查結果 (Sono)")
-    do_sono = st.checkbox("執行超音波檢查(Performed Sonography)")
+    # 4. Assessment & Plan (診斷與計畫)
+    st.subheader("Assessment & Plan (A/P)")
+    # 根據勾選自動切換建議 Dx，如果是腹痛就換成 Abdominal pain
+    default_dx = "Acute Gastroenteritis" if cc_abd_pain else "Acute Upper Respiratory Infection"
+    diagnosis = st.text_input("初步診斷 (Dx)", value=default_dx)
+    plan_med = st.checkbox("開立處方藥物 (Medication)")
+    plan_education = st.checkbox("衛教 (Rest, hydration)")
 
-    sono_type = "Abdominal Sonography"
-    sono_findings = []
-    if do_sono:
-        sono_type = st.selectbox("超音波項目", ["Abdominal Sono", "Thyroid Sono", "Breast Sono"])
-
-        # 根據不同的超音波項目，給予對應的常用 findings 勾選
-        if sono_type == "Abdominal Sono":
-            if st.checkbox("Fatty liver (脂肪肝)"): sono_findings.append("Mild fatty liver noted.")
-            if st.checkbox("Gallstone (膽結石)"): sono_findings.append("A gallbladder stone about 1.2cm with acoustic shadow.")
-            if st.checkbox("GB wall thickening (膽囊壁變厚)"): sono_findings.append("Gallbladder wall thickening noted, acute cholecystitis cannot be ruled out.")
-            if st.checkbox("Renal stone (腎結石)"): sono_findings.append("Right renal stone noted.")
-
-
-# ==================== 右側欄位：即時組合並顯示報告 (已移出 with col1) ====================
+# 在右側即時組合並顯示病歷
 with col2:
-    st.header("📝 產出報告區")
-    st.write("您可以直接複製下方文字貼回 HIS 的 SOAP 欄位：")
+    st.header("📝 產出的英文病歷")
+    st.write("您可以直接複製右側文字貼回 HIS 系統：")
+    
+    # 根據左側的勾選結果，用 Python 邏輯組合字串
     soap_text = ""
-
+    
     # S 區塊
     soap_text += f"[Subjective]\n"
     soap_text += f"This {age}-year-old {gender} presented with "
     symptoms = []
-    
     if cc_cough: symptoms.append("cough")
     if cc_fever: symptoms.append(f"fever (BT: {bt}°C)")
     if cc_dyspnea: symptoms.append("dyspnea")
     
     # 處理腹痛的文字邏輯：如果有選位置，就直接用位置的字串
-    if cc_abd_pain and abd_location:
-        symptoms.extend(abd_location)
-    elif cc_abd_pain and not abd_location:
-        symptoms.append("abdominal pain")
-            
+    if cc_abd_pain:
+        symptoms.append(abd_location)
+    
     if symptoms:
         soap_text += ", ".join(symptoms) + ".\n"
     else:
         soap_text += "no special discomfort today.\n"
         
     soap_text += "\n"
-
+    
     # O 區塊
     soap_text += f"[Objective]\n"
-    if vital_sign:
-        soap_text += f"- Vital signs: {vital_sign}\n"
-
     if pe_throat:
         soap_text += "- Throat: Throat injection (+)\n"
     else:
         soap_text += "- Throat: Not injected\n"
-            
     soap_text += f"- Chest: Breathing sound: {pe_breathing}\n"
     
     # 如果有腹痛，在 Objective 也自動補上腹部觸診結果
     if cc_abd_pain:
-        soap_text += f"- Abdomen: Soft, {pe_tenderness}, {pe_bowel_sound}\n"
-      
+        soap_text += f"- Abdomen: Soft, {pe_tenderness}\n"
+    
     soap_text += "\n"
-    st.text_area("SOAP Output (可直接複製)", value=soap_text, height=400, key="soap_area_final")
-        
+    
+    # A 區塊
+    soap_text += f"[Assessment]\n"
+    soap_text += f"- {diagnosis}\n\n"
+    
+    # P 區塊
+    soap_text += f"[Plan]\n"
+    plans = []
+    if plan_med: plans.append("Medication prescribed.")
+    if plan_education: plans.append("Patient was educated about lifestyle modifications, adequate hydration, and rest.")
+    if plans:
+        soap_text += "\n".join([f"- {p}" for p in plans]) + "\n"
+    else:
+        soap_text += "- Routine follow up.\n"
+
+    # 在網頁上呈現一個方便複製的文字框
+    st.text_area("SOAP Output (可直接複製)", value=soap_text, height=400)
