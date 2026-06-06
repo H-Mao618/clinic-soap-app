@@ -70,55 +70,49 @@ with col1:
 # ==================== 右側欄位：即時組合並顯示報告 (已移出 with col1) ====================
 with col2:
     st.header("📝 產出報告區")
+    st.write("您可以直接複製下方文字貼回 HIS 的 SOAP 欄位：")
+    soap_text = ""
 
-    # 🌟 建立兩個分頁：一個放 SOAP，一個放 Sono 報告
-    tab_soap, tab_sono = st.tabs(["📄 門診病歷 (SOAP)", "📊 超音波報告 (Sono Report)"])
-   
-    # --- Tab 1: SOAP 病歷組合邏輯 ---
-    with tab_soap:
-        st.write("您可以直接複製下方文字貼回 HIS 的 SOAP 欄位：")
-        soap_text = ""
-
-        # S 區塊
-        soap_text += f"[Subjective]\n"
-        soap_text += f"This {age}-year-old {gender} presented with "
-        symptoms = []
+    # S 區塊
+    soap_text += f"[Subjective]\n"
+    soap_text += f"This {age}-year-old {gender} presented with "
+    symptoms = []
     
-        if cc_cough: symptoms.append("cough")
-        if cc_fever: symptoms.append(f"fever (BT: {bt}°C)")
-        if cc_dyspnea: symptoms.append("dyspnea")
+    if cc_cough: symptoms.append("cough")
+    if cc_fever: symptoms.append(f"fever (BT: {bt}°C)")
+    if cc_dyspnea: symptoms.append("dyspnea")
     
-        # 處理腹痛的文字邏輯：如果有選位置，就直接用位置的字串
-        if cc_abd_pain and abd_location:
-            symptoms.extend(abd_location)
-        elif cc_abd_pain and not abd_location:
-            symptoms.append("abdominal pain")
+    # 處理腹痛的文字邏輯：如果有選位置，就直接用位置的字串
+    if cc_abd_pain and abd_location:
+        symptoms.extend(abd_location)
+    elif cc_abd_pain and not abd_location:
+        symptoms.append("abdominal pain")
             
-        if symptoms:
-            soap_text += ", ".join(symptoms) + ".\n"
-        else:
-            soap_text += "no special discomfort today.\n"
+    if symptoms:
+        soap_text += ", ".join(symptoms) + ".\n"
+    else:
+        soap_text += "no special discomfort today.\n"
         
-        soap_text += "\n"
+    soap_text += "\n"
 
-        # O 區塊
-        soap_text += f"[Objective]\n"
-        if vital_sign:
-            soap_text += f"- Vital signs: {vital_sign}\n"
+    # O 區塊
+    soap_text += f"[Objective]\n"
+    if vital_sign:
+        soap_text += f"- Vital signs: {vital_sign}\n"
 
-        if pe_throat:
-            soap_text += "- Throat: Throat injection (+)\n"
-        else:
-            soap_text += "- Throat: Not injected\n"
+    if pe_throat:
+        soap_text += "- Throat: Throat injection (+)\n"
+    else:
+        soap_text += "- Throat: Not injected\n"
             
-        soap_text += f"- Chest: Breathing sound: {pe_breathing}\n"
+    soap_text += f"- Chest: Breathing sound: {pe_breathing}\n"
     
-        # 如果有腹痛，在 Objective 也自動補上腹部觸診結果
-        if cc_abd_pain:
-            soap_text += f"- Abdomen: Soft, {pe_tenderness}, {pe_bowel_sound}\n"
+    # 如果有腹痛，在 Objective 也自動補上腹部觸診結果
+    if cc_abd_pain:
+        soap_text += f"- Abdomen: Soft, {pe_tenderness}, {pe_bowel_sound}\n"
       
-        soap_text += "\n"
-        st.text_area("SOAP Output (可直接複製)", value=soap_text, height=400, key="soap_area_final")
+    soap_text += "\n"
+    st.text_area("SOAP Output (可直接複製)", value=soap_text, height=400, key="soap_area_final")
         
     # --- Tab 2: 超音波報告組合邏輯 ---
     with tab_sono:
