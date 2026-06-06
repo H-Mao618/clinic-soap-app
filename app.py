@@ -67,8 +67,7 @@ with col1:
     if do_sono:
         sono_type = st.selectbox("Select Sono type", ["Abdominal sono", "Thyroid sono", "Breast sono"])
         if sono_type == "Abdominal sono":
-            findings_abd = st.checkbox("Fatty liver change", "Liver mass", "GB stone", "GB wall thickening", "Kidney stone")
-            
+            findings_abd = st.multiselect("請勾選腹部超音波異常發現", ["Fatty liver change", "Liver mass", "GB stone", "GB wall thickening", "Kidney stone"])
     
     # 6. Assessment & Plan (診斷與計畫)
     st.subheader("Assessment & Plan (A/P)")
