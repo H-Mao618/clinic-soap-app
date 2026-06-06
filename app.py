@@ -153,6 +153,6 @@ with col2:
             else:
                 sono_text += "- No remarkable abnormality noted.\n"
         else:
-            sono_text = "（左側未勾選「執行超音波檢查」，故不生成報告）"
+            sono_text = "（左側未勾選「執行超音波檢查」，故不生成）"
             
         st.text_area("Sono Report Output", value=sono_text, height=450, key="sono_area")
