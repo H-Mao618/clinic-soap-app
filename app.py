@@ -7,7 +7,6 @@ st.caption("本機端單機運行，100% 確保病患隱私安全")
 
 # 使用 Streamlit 的左右分欄功能
 col1, col2 = st.columns([1, 1])
-
 with col1:
     st.header("📋 症狀與檢查點選")
    
@@ -35,29 +34,20 @@ with col1:
     # 條件式連動：如果勾選發燒，才顯示體溫輸入框
     
     bt = 36.5
-    
     if cc_fever:
-        
         bt = st.number_input("Body Temperature (°C)", min_value=35.0, max_value=42.0, value=38.2, step=0.1)
         
-    
-    
+        
     # 3. Objective (理學檢查)
-    
     st.subheader("Objective (O)")
-    
     pe_throat = st.checkbox("Throat: Infected/Injected (喉嚨紅腫)")
-    
     pe_breathing = st.selectbox("Breathing Sound (呼吸音)", ["Clear", "Wheezing (喘鳴音)", "Rales (濕囉音)"])
-
    
-
     # 這裡順便幫您加一個腹部理學檢查的連動，如果點腹痛，就預設跳出壓痛選項
     
     pe_tenderness = "no tenderness"
     
     if cc_abd_pain:
-        
         pe_tenderness = st.selectbox("Abdomen PE (觸診)", ["no tenderness", "tenderness (+)", "rebounding tenderness (+)"])
     pe_bowel_sound = st.selectbox("Bowel sound (腸音)", ["normo-active BS", "hyper-active BS", "hypo-active BS"])  
 
@@ -78,13 +68,7 @@ with col1:
             if st.checkbox("GB wall thickening (膽囊壁變厚)"): sono_findings.append("Gallbladder wall thickening noted, acute cholecystitis cannot be ruled out.")
             if st.checkbox("Renal stone (腎結石)"): sono_findings.append("Right renal stone noted.")
 
-
-
-
-# 在右側即時組合並顯示病歷
-
 with col2:
-    
     st.header("📝 產出報告區")
 
     # 🌟 建立兩個分頁：一個放 SOAP，一個放 Sono 報告
@@ -95,7 +79,7 @@ with col2:
         st.write("您可以直接複製下方文字貼回 HIS 的 SOAP 欄位：")
         soap_text = ""
 
-    # S 區塊
+        # S 區塊
     
         soap_text += f"[Subjective]\n"
     
@@ -110,7 +94,7 @@ with col2:
         if cc_dyspnea: symptoms.append("dyspnea")
     
     
-    # 處理腹痛的文字邏輯：如果有選位置，就直接用位置的字串
+        # 處理腹痛的文字邏輯：如果有選位置，就直接用位置的字串
     
         if cc_abd_pain and abd_location:
         
@@ -129,7 +113,7 @@ with col2:
         
         soap_text += "\n"
 
-    # O 區塊
+        # O 區塊
     
         soap_text += f"[Objective]\n"
     
@@ -146,16 +130,15 @@ with col2:
             soap_text += "- Throat: Not injected\n"
     
         soap_text += f"- Chest: Breathing sound: {pe_breathing}\n"
-    
-    
-    # 如果有腹痛，在 Objective 也自動補上腹部觸診結果
+        
+        # 如果有腹痛，在 Objective 也自動補上腹部觸診結果
     
         if cc_abd_pain:
-        
             soap_text += f"- Abdomen: Soft, {pe_tenderness}, {pe_bowel_sound}\n"
       
         soap_text += "\n"
         st.text_area("SOAP Output (可直接複製)", value=soap_text, height=400, key="soap_area_final")
+    
     # --- Tab 2: 超音波報告組合邏輯 ---
     with tab_sono:
         st.write("您可以直接複製下方文字貼回 HIS 的 Echo 報告欄位：")
