@@ -57,6 +57,17 @@ with col1:
     plan_med = st.checkbox("開立處方藥物 (Medication)")
     plan_education = st.checkbox("衛教 (Rest, hydration)")
 
+    # 5. Sonography (超音波檢查)
+    st.subheader("Sonography")
+    do_sono = st.checkbox("Perform sonography")
+    sono_type = []
+    if do_sono:
+        sono_type = st.multiselect(["Abdominal sono", "Thyroid sono", "Breast sono"])
+    
+    # 6. Assessment & Plan (診斷與計畫)
+    st.subheader("Assessment & Plan (A/P)")
+
+
 # 在右側即時組合並顯示病歷
 with col2:
     st.header("📝 產出報告區")
