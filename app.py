@@ -60,9 +60,12 @@ with col1:
     # 5. Sonography (超音波檢查)
     st.subheader("Sonography")
     do_sono = st.checkbox("Perform sonography")
-    sono_type = []
+    sono_date = st.date_input("檢查日期")
+    sono_date_str = sono_date.strftime('%Y-%m-%d')sono_type = []
     if do_sono:
         sono_type = st.multiselect("Select Sono type", ["Abdominal sono", "Thyroid sono", "Breast sono"])
+    
+
     
     # 6. Assessment & Plan (診斷與計畫)
     st.subheader("Assessment & Plan (A/P)")
@@ -134,7 +137,8 @@ with col2:
     with tab_sono:
         st.write("您可以直接複製下方文字貼回 HIS 的 SONO 欄位：")
         sono_text = ""
-        sono_text += f"{st.date_input}, {sono_type}"
+        sono_text += f"Date: {sono_date_str}, {sono_type}"
+
         
         # 在網頁上呈現一個方便複製的文字框
         st.text_area("SONO Output (可直接複製)", value=sono_text, height=400)
