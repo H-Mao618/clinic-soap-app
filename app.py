@@ -59,7 +59,11 @@ with col1:
 
 # 在右側即時組合並顯示病歷
 with col2:
-    st.header("📝 產出的英文病歷")
+    st.header("📝 產出報告區")
+
+    # 🌟 建立兩個分頁：一個放 SOAP，一個放 Sono 報告
+    tab_soap, tab_sono = st.tabs(["📄 門診病歷 (SOAP)", "📊 超音波報告 (Sono Report)"])
+    
     st.write("您可以直接複製右側文字貼回 HIS 系統：")
     
     # 根據左側的勾選結果，用 Python 邏輯組合字串
