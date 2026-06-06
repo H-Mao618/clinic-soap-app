@@ -62,7 +62,7 @@ with col1:
     do_sono = st.checkbox("Perform sonography")
     sono_type = []
     if do_sono:
-        sono_type = st.multiselect(["Abdominal sono", "Thyroid sono", "Breast sono"])
+        sono_type = st.multiselect("Select Sono type", ["Abdominal sono", "Thyroid sono", "Breast sono"])
     
     # 6. Assessment & Plan (診斷與計畫)
     st.subheader("Assessment & Plan (A/P)")
