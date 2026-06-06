@@ -64,59 +64,58 @@ with col2:
     # 🌟 建立兩個分頁：一個放 SOAP，一個放 Sono 報告
     tab_soap, tab_sono = st.tabs(["📄 門診病歷 (SOAP)", "📊 超音波報告 (Sono Report)"])
     
-    st.write("您可以直接複製右側文字貼回 HIS 系統：")
-    
-    # 根據左側的勾選結果，用 Python 邏輯組合字串
-    soap_text = ""
-    
-    # S 區塊
-    soap_text += f"[Subjective]\n"
-    soap_text += f"This {age}-year-old {gender} presented with "
-    symptoms = []
-    if cc_cough: symptoms.append("cough")
-    if cc_fever: symptoms.append(f"fever (BT: {bt}°C)")
-    if cc_dyspnea: symptoms.append("dyspnea")
-    
-    # 處理腹痛的文字邏輯：如果有選位置，就直接用位置的字串
-    if cc_abd_pain and abd_location:
-        symptoms.extend(abd_location)  # .extend 會把複選的多個部位拆開，漂亮地排在籃子裡
-    elif cc_abd_pain and not abd_location:
-        symptoms.append("abdominal pain")
-    
-    if symptoms:
-        soap_text += ", ".join(symptoms) + ".\n"
-    else:
-        soap_text += "no special discomfort today.\n"
+    with tab_soap:
+        st.write("您可以直接複製下方文字貼回 HIS 的 SOAP 欄位：")
+        soap_text = ""
         
-    soap_text += "\n"
+        # S 區塊
+        soap_text += f"[Subjective]\n"
+        soap_text += f"This {age}-year-old {gender} presented with "
+        symptoms = []
+        if cc_cough: symptoms.append("cough")
+        if cc_fever: symptoms.append(f"fever (BT: {bt}°C)")
+        if cc_dyspnea: symptoms.append("dyspnea")
     
-    # O 區塊
-    soap_text += f"[Objective]\n"
-    if pe_throat:
-        soap_text += "- Throat: Throat injection (+)\n"
-    else:
-        soap_text += "- Throat: Not injected\n"
-    soap_text += f"- Chest: Breathing sound: {pe_breathing}\n"
+        # 處理腹痛的文字邏輯：如果有選位置，就直接用位置的字串
+        if cc_abd_pain and abd_location:
+            symptoms.extend(abd_location)  # .extend 會把複選的多個部位拆開，漂亮地排在籃子裡
+        elif cc_abd_pain and not abd_location:
+            symptoms.append("abdominal pain")
     
-    # 如果有腹痛，在 Objective 也自動補上腹部觸診結果
-    if cc_abd_pain:
-        soap_text += f"- Abdomen: Soft, {pe_tenderness}\n"
+        if symptoms:
+            soap_text += ", ".join(symptoms) + ".\n"
+        else:
+            soap_text += "no special discomfort today.\n"
+        
+        soap_text += "\n"
     
-    soap_text += "\n"
+        # O 區塊
+        soap_text += f"[Objective]\n"
+        if pe_throat:
+            soap_text += "- Throat: Throat injection (+)\n"
+        else:
+            soap_text += "- Throat: Not injected\n"
+        soap_text += f"- Chest: Breathing sound: {pe_breathing}\n"
     
-    # A 區塊
-    soap_text += f"[Assessment]\n"
-    soap_text += f"- {diagnosis}\n\n"
+        # 如果有腹痛，在 Objective 也自動補上腹部觸診結果
+        if cc_abd_pain:
+            soap_text += f"- Abdomen: Soft, {pe_tenderness}\n"
     
-    # P 區塊
-    soap_text += f"[Plan]\n"
-    plans = []
-    if plan_med: plans.append("Medication prescribed.")
-    if plan_education: plans.append("Patient was educated about lifestyle modifications, adequate hydration, and rest.")
-    if plans:
-        soap_text += "\n".join([f"- {p}" for p in plans]) + "\n"
-    else:
-        soap_text += "- Routine follow up.\n"
+        soap_text += "\n"
+    
+        # A 區塊
+        soap_text += f"[Assessment]\n"
+        soap_text += f"- {diagnosis}\n\n"
+    
+        # P 區塊
+        soap_text += f"[Plan]\n"
+        plans = []
+        if plan_med: plans.append("Medication prescribed.")
+        if plan_education: plans.append("Patient was educated about lifestyle modifications, adequate hydration, and rest.")
+        if plans:
+            soap_text += "\n".join([f"- {p}" for p in plans]) + "\n"
+        else:
+            soap_text += "- Routine follow up.\n"
 
-    # 在網頁上呈現一個方便複製的文字框
-    st.text_area("SOAP Output (可直接複製)", value=soap_text, height=400)
+        # 在網頁上呈現一個方便複製的文字框
+        st.text_area("SOAP Output (可直接複製)", value=soap_text, height=400)
