@@ -47,7 +47,8 @@ with col1:
     pe_tenderness = "no tenderness"
     if cc_abd_pain:
         pe_tenderness = st.selectbox("Abdomen PE (觸診)", ["no tenderness", "tenderness (+)", "rebounding tenderness (+)"])
-
+    pe_bowel_sound = st.selectbox("Bowel sound (腸音)", ["normo-active BS", "hyper-active BS", "hypo-active BS"])
+    
     # 4. Assessment & Plan (診斷與計畫)
     st.subheader("Assessment & Plan (A/P)")
     # 根據勾選自動切換建議 Dx，如果是腹痛就換成 Abdominal pain
