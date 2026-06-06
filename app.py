@@ -139,7 +139,7 @@ with col2:
     with tab_sono:
         st.write("您可以直接複製下方文字貼回 HIS 的 SONO 欄位：")
         sono_text = ""
-        sono_text += f"Date: {sono_date_str}, {sono_type}"
+        sono_text += f"{sono_date_str}, {sono_type}"
 
         
         # 在網頁上呈現一個方便複製的文字框
