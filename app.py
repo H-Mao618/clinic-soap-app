@@ -135,4 +135,6 @@ with col2:
         st.write("您可以直接複製下方文字貼回 HIS 的 SONO 欄位：")
         sono_text = ""
         sono_text += f"{st.date_input}, {sono_type}"
-       
+        
+        # 在網頁上呈現一個方便複製的文字框
+        st.text_area("SONO Output (可直接複製)", value=soap_text, height=400)
