@@ -74,8 +74,10 @@ with col2:
     if cc_dyspnea: symptoms.append("dyspnea")
     
     # 處理腹痛的文字邏輯：如果有選位置，就直接用位置的字串
-    if cc_abd_pain:
-        symptoms.append(abd_location)
+    if cc_abd_pain and abd_location:
+        symptoms.extend(abd_location)  # .extend 會把複選的多個部位拆開，漂亮地排在籃子裡
+    elif cc_abd_pain and not abd_location:
+        symptoms.append("abdominal pain")
     
     if symptoms:
         soap_text += ", ".join(symptoms) + ".\n"
