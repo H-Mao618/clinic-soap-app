@@ -137,4 +137,4 @@ with col2:
         sono_text += f"{st.date_input}, {sono_type}"
         
         # 在網頁上呈現一個方便複製的文字框
-        st.text_area("SONO Output (可直接複製)", value=soap_text, height=400)
+        st.text_area("SONO Output (可直接複製)", value=sono_text, height=400)
