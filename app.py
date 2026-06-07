@@ -69,10 +69,14 @@ with col1:
         sono_type = st.selectbox("Select Sono type", ["Abdominal sono", "Thyroid sono", "Breast sono"])
         if sono_type == "Abdominal sono":
             findings_abd = st.multiselect("請勾選腹部超音波異常發現", ["Fatty liver change", "Liver mass", "GB stone", "GB wall thickening", "Kidney stone"])
-            if findings_abd == "Fatty liver change":
+            if "Fatty  liver change" in findings_abd:
                 fatty_liver_grade = st.selectbox("Select grade", ["Mild", "Moderate", "Severe"])
-                    if fatty_liver_grade == "Mild": sono_findings.append("Mild fatty liver change.")
-
+                if fatty_liver_grade == "Mild": 
+                    sono_findings.append("Mild fatty liver change.")
+                elif fatty_liver_grade == "Moderate": 
+                    sono_findings.append("Moderate fatty liver change noted.")
+                elif fatty_liver_grade == "Severe": 
+                    sono_findings.append("Severe fatty liver change noted.")
     
     # 6. Assessment & Plan (診斷與計畫)
     st.subheader("Assessment & Plan (A/P)")
