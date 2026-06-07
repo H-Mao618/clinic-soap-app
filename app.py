@@ -62,12 +62,17 @@ with col1:
     do_sono = st.checkbox("Perform sonography")
     sono_date = st.date_input("檢查日期")
     sono_date_str = sono_date.strftime('%Y-%m-%d')
-    
+
     sono_type = []
+    sono_findings = []
     if do_sono:
         sono_type = st.selectbox("Select Sono type", ["Abdominal sono", "Thyroid sono", "Breast sono"])
         if sono_type == "Abdominal sono":
             findings_abd = st.multiselect("請勾選腹部超音波異常發現", ["Fatty liver change", "Liver mass", "GB stone", "GB wall thickening", "Kidney stone"])
+            if findings_abd == "Fatty liver change":
+                fatty_liver_grade = st.selectbox("Select grade", ["Mild", "Moderate", "Severe"])
+                    if fatty_liver_grade == "Mild": sono_findings.append("Mild fatty liver change.")
+
     
     # 6. Assessment & Plan (診斷與計畫)
     st.subheader("Assessment & Plan (A/P)")
@@ -140,7 +145,12 @@ with col2:
         st.write("您可以直接複製下方文字貼回 HIS 的 SONO 欄位：")
         sono_text = ""
         sono_text += f"{sono_date_str}, {sono_type}"
-
+        
+        if sono_findings:
+            for finding in sono_findings:
+                sono_text += f"- {finding}\n"
+            else:
+                sono_text += "- No remarkable abnormality noted.\n"
         
         # 在網頁上呈現一個方便複製的文字框
         st.text_area("SONO Output (可直接複製)", value=sono_text, height=400)
