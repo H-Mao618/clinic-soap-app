@@ -153,8 +153,8 @@ with col2:
         if sono_findings:
             for finding in sono_findings:
                 sono_text += f"- {finding}\n"
-            else:
-                sono_text += "- No remarkable abnormality noted.\n"
+        else:
+            sono_text += "- No remarkable abnormality noted.\n"
         
         # 在網頁上呈現一個方便複製的文字框
         st.text_area("SONO Output (可直接複製)", value=sono_text, height=400)
