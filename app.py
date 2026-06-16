@@ -78,6 +78,8 @@ with col1:
                     sono_findings.append("Moderate fatty liver change.")
                 elif fatty_liver_grade == "Severe": 
                     sono_findings.append("Severe fatty liver change.")
+            else:  
+                sono_findings.append("No fatty liver change.")
 # --- 2. Liver mass 邏輯 (選擇 Segment 與輸入大小) ---
             if "Liver mass" in findings_abd:
                 st.caption("↳ Liver mass 詳細設定：")
@@ -191,7 +193,7 @@ with col2:
     with tab_sono:
         st.write("您可以直接複製下方文字貼回 HIS 的 SONO 欄位：")
         sono_text = ""
-        sono_text += f"{sono_date_str}, {sono_type}"
+        sono_text += f"{sono_date_str}, {sono_type}.\n"
         
         if sono_findings:
             for finding in sono_findings:
