@@ -123,7 +123,26 @@ with col1:
                     sono_findings.append(f"Bilateral renal stones, largest {ks_size} cm.")
                 else:
                     sono_findings.append(f"{ks_side} renal stone {ks_size} cm.")
-
+        if sono_type == "Thyroid sono":
+            st.write("### 🦋 甲狀腺超音波紀錄")
+            
+            st.caption("↳ Thyroid Lobes Size (cm):")
+            c_left1, c_left2 = st.columns(3)
+            with c_left1:
+                l_length = st.number_input("Left Lobe 長", min_value=0.1, max_value=10.0, value=4.0, step=0.1, key="l_len")
+            with c_left2:
+                l_width = st.number_input("Left Lobe 寬", min_value=0.1, max_value=5.0, value=1.5, step=0.1, key="l_wid")
+            with c_left3:
+                l_thick = st.number_input("Left Lobe 厚", min_value=0.1, max_value=5.0, value=1.2, step=0.1, key="l_thk")
+                
+            c_rt1, c_rt2, c_rt3 = st.columns(3)
+            with c_rt1:
+                r_length = st.number_input("Right Lobe 長", min_value=0.1, max_value=10.0, value=4.0, step=0.1, key="r_len")
+            with c_rt2:
+                r_width = st.number_input("Right Lobe 寬", min_value=0.1, max_value=5.0, value=1.5, step=0.1, key="r_wid")
+            with c_rt3:
+                r_thick = st.number_input("Right Lobe 厚", min_value=0.1, max_value=5.0, value=1.2, step=0.1, key="r_thk")
+    
     
     # 6. Assessment & Plan (診斷與計畫)
     st.subheader("Assessment & Plan (A/P)")
