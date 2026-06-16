@@ -100,6 +100,7 @@ with col1:
                 gb_stone_size = st.number_input("Stone size (cm)", min_value=0.1, max_value=10.0, value=1.0, step=0.1, key="gb_stone")
                 
                 sono_findings.append(f"A GB stone about {gb_stone_size} cm.")
+            else: sono_findings.append("No GB stone.")
 
             # --- 4. GB wall thickening 邏輯 (輸入厚度) ---
             if "GB wall thickening" in findings_abd:
@@ -108,6 +109,7 @@ with col1:
                 gb_wall_thickness = st.number_input("Wall thickness (mm)", min_value=1.0, max_value=20.0, value=4.0, step=0.5, key="gb_wall")
                 
                 sono_findings.append(f"GB wall thickening ({gb_wall_thickness} mm).")
+            else: sono_findings.append("No GB wall thickening.")
 
             # --- 5. Kidney stone 邏輯 (選擇左右側與輸入大小) ---
             if "Kidney stone" in findings_abd:
