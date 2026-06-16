@@ -69,14 +69,57 @@ with col1:
         sono_type = st.selectbox("Select Sono type", ["Abdominal sono", "Thyroid sono", "Breast sono"])
         if sono_type == "Abdominal sono":
             findings_abd = st.multiselect("請勾選腹部超音波異常發現", ["Fatty liver change", "Liver mass", "GB stone", "GB wall thickening", "Kidney stone"])
+            
             if "Fatty liver change" in findings_abd:
                 fatty_liver_grade = st.selectbox("Select grade", ["Mild", "Moderate", "Severe"])
                 if fatty_liver_grade == "Mild": 
                     sono_findings.append("Mild fatty liver change.")
                 elif fatty_liver_grade == "Moderate": 
-                    sono_findings.append("Moderate fatty liver change noted.")
+                    sono_findings.append("Moderate fatty liver change.")
                 elif fatty_liver_grade == "Severe": 
-                    sono_findings.append("Severe fatty liver change noted.")
+                    sono_findings.append("Severe fatty liver change.")
+# --- 2. Liver mass 邏輯 (選擇 Segment 與輸入大小) ---
+            if "Liver mass" in findings_abd:
+                st.caption("↳ Liver mass 詳細設定：")
+                # 建立 Segment 的下拉選單
+                mass_seg = st.selectbox(
+                    "Select Segment", 
+                    ["S1", "S2", "S3", "S4", "S5", "S6", "S7", "S8", "indeterminate region"]
+                )
+                # 建立大小輸入框（預設 1.0 cm，每次加減 0.1）
+                mass_size = st.number_input("Mass size (cm)", min_value=0.1, max_value=20.0, value=1.0, step=0.1, key="mass_size")
+                
+                # 自動組合成正式醫學英文病歷
+                sono_findings.append(f"A liver mass measuring about {mass_size} cm at {mass_seg}.")
+
+            # --- 3. GB stone 邏輯 (輸入大小) ---
+            if "GB stone" in findings_abd:
+                st.caption("↳ Gallbladder stone 詳細設定：")
+                gb_stone_size = st.number_input("Stone size (cm)", min_value=0.1, max_value=10.0, value=1.0, step=0.1, key="gb_stone")
+                
+                sono_findings.append(f"A GB stone about {gb_stone_size} cm.")
+
+            # --- 4. GB wall thickening 邏輯 (輸入厚度) ---
+            if "GB wall thickening" in findings_abd:
+                st.caption("↳ GB wall thickening 詳細設定：")
+                # 膽囊壁通常用 mm 計算比較精準
+                gb_wall_thickness = st.number_input("Wall thickness (mm)", min_value=1.0, max_value=20.0, value=4.0, step=0.5, key="gb_wall")
+                
+                sono_findings.append(f"GB wall thickening ({gb_wall_thickness} mm).")
+
+            # --- 5. Kidney stone 邏輯 (選擇左右側與輸入大小) ---
+            if "Kidney stone" in findings_abd:
+                st.caption("↳ Kidney stone 詳細設定：")
+                # 選擇左側、右側或雙側
+                ks_side = st.selectbox("Select Side", ["Right", "Left", "Bilateral"])
+                ks_size = st.number_input("Stone size (cm)", min_value=0.1, max_value=5.0, value=0.5, step=0.1, key="ks_size")
+                
+                # 根據單複數自動微調文法 (如果選 Bilateral 用 stones，其餘用 stone)
+                if ks_side == "Bilateral":
+                    sono_findings.append(f"Bilateral renal stones, largest {ks_size} cm.")
+                else:
+                    sono_findings.append(f"{ks_side} renal stone {ks_size} cm.")
+
     
     # 6. Assessment & Plan (診斷與計畫)
     st.subheader("Assessment & Plan (A/P)")
