@@ -127,22 +127,58 @@ with col1:
             st.write("### 🦋 甲狀腺超音波紀錄")
             
             st.caption("↳ Thyroid Lobes Size (cm):")
-            c_left1, c_left2 = st.columns(3)
+            c_left1, c_left2, c_left3 = st.columns(3)
             with c_left1:
                 l_length = st.number_input("Left Lobe 長", min_value=0.1, max_value=10.0, value=4.0, step=0.1, key="l_len")
             with c_left2:
-                l_width = st.number_input("Left Lobe 寬", min_value=0.1, max_value=5.0, value=1.5, step=0.1, key="l_wid")
+                l_width = st.number_input("Left Lobe 寬", min_value=0.1, max_value=8.0, value=1.5, step=0.1, key="l_wid")
             with c_left3:
-                l_thick = st.number_input("Left Lobe 厚", min_value=0.1, max_value=5.0, value=1.2, step=0.1, key="l_thk")
+                l_thick = st.number_input("Left Lobe 厚", min_value=0.1, max_value=8.0, value=1.2, step=0.1, key="l_thk")
                 
             c_rt1, c_rt2, c_rt3 = st.columns(3)
             with c_rt1:
                 r_length = st.number_input("Right Lobe 長", min_value=0.1, max_value=10.0, value=4.0, step=0.1, key="r_len")
             with c_rt2:
-                r_width = st.number_input("Right Lobe 寬", min_value=0.1, max_value=5.0, value=1.5, step=0.1, key="r_wid")
+                r_width = st.number_input("Right Lobe 寬", min_value=0.1, max_value=8.0, value=1.5, step=0.1, key="r_wid")
             with c_rt3:
-                r_thick = st.number_input("Right Lobe 厚", min_value=0.1, max_value=5.0, value=1.2, step=0.1, key="r_thk")
-    
+                r_thick = st.number_input("Right Lobe 厚", min_value=0.1, max_value=8.0, value=1.2, step=0.1, key="r_thk")
+
+            sono_findings.append(f"Left lobe: {l_length} x {l_width} x {l_thick} cm")
+            sono_findings.append(f"Right lobe: {r_length} x {r_width} x {r_thick} cm")
+
+            st.divider()
+
+            # --- 2. 甲狀腺結節設定 ---
+            has_nodule = st.checkbox("有無發現甲狀腺結節 (Thyroid Nodule)", value=False)
+            
+            if has_nodule:
+                st.caption("↳ Thyroid Nodule 詳細設定：")
+                
+                # 側別與位置多選 (因為病人可能同時有很多顆結節)
+                nodule_locs = st.multiselect("請勾選結節位置", ["左上 (L-upper)", "左中 (L-middle)", "左下 (L-lower)", "右上 (R-upper)", "右中 (R-middle)", "右下 (R-lower)", "峽部 (Isthmus)"])
+                nodule_size = st.number_input("最大結節大小 (cm)", min_value=0.1, max_value=10.0, value=0.5, step=0.1, key="nodule_sz")
+                
+                # 臨床加碼：可選擇性質，讓報告更專業
+                nodule_nature = st.selectbox("結節性質描述", ["Nodule(s)", "Cystic lesion(s)", "Hypoechoic nodule(s)", "Calcified nodule(s)"])
+
+                if nodule_locs:
+                    # 把中文的位置換成病歷用的英文
+                    loc_mapping = {
+                        "左上 (L-upper)": "L-upper lobe", "左中 (L-middle)": "L-middle lobe", "左下 (L-lower)": "L-lower lobe",
+                        "右上 (R-upper)": "R-upper lobe", "右中 (R-middle)": "R-middle lobe", "右下 (R-lower)": "R-lower lobe",
+                        "峽部 (Isthmus)": "isthmus"
+                    }
+                    # 將醫生勾選的所有位置轉換成英文，並用逗號串起來
+                    eng_locs = [loc_mapping[loc] for loc in nodule_locs]
+                    locs_str = ", ".join(eng_locs)
+                    
+                    # 丟進報告籃子
+                    sono_findings.append(f"{nodule_nature} measuring up to {nodule_size} cm noted at {locs_str}.")
+                else:
+                    # 如果打了勾但沒選位置，給一個保底文字
+                    sono_findings.append(f"{nodule_nature} measuring {nodule_size} cm noted.")
+            else:
+                sono_findings.append("No focal cystic or solid nodule is noted.")
     
     # 6. Assessment & Plan (診斷與計畫)
     st.subheader("Assessment & Plan (A/P)")
