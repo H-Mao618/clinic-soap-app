@@ -143,41 +143,74 @@ with col1:
             with c_rt3:
                 r_thick = st.number_input("Right Lobe 厚", min_value=0.1, max_value=8.0, value=1.2, step=0.1, key="r_thk")
 
+            isthmus_size = st. number_input("Isthmus 厚", min_value=0.05, max_value=2.0, value=0.2, step=0.01, key="is_thk")
+            
             sono_findings.append(f"Left lobe: {l_length} x {l_width} x {l_thick} cm")
             sono_findings.append(f"Right lobe: {r_length} x {r_width} x {r_thick} cm")
-
+            sono_findings.append(f"Isthmus: {isthmus_size} cm")
             st.divider()
 
             # --- 2. 甲狀腺結節設定 ---
-            has_nodule = st.checkbox("有無發現甲狀腺結節 (Thyroid Nodule)", value=False)
+            st.write("#### 🎯 甲狀腺結節紀錄")
             
-            if has_nodule:
-                st.caption("↳ Thyroid Nodule 詳細設定：")
-                
-                # 側別與位置多選 (因為病人可能同時有很多顆結節)
-                nodule_locs = st.multiselect("請勾選結節位置", ["左上 (L-upper)", "左中 (L-middle)", "左下 (L-lower)", "右上 (R-upper)", "右中 (R-middle)", "右下 (R-lower)", "峽部 (Isthmus)"])
-                nodule_size = st.number_input("最大結節大小 (cm)", min_value=0.1, max_value=10.0, value=0.5, step=0.1, key="nodule_sz")
-                
-                # 臨床加碼：可選擇性質，讓報告更專業
-                nodule_nature = st.selectbox("結節性質描述", ["Nodule(s)", "Cystic lesion(s)", "Hypoechoic nodule(s)", "Calcified nodule(s)"])
+            # 【步驟 A】初始化記憶置物櫃：如果裡面沒有結節清單，就先建立一個空的
+            if "thyroid_nodules" not in st.session_state:
+                st.session_state.thyroid_nodules = []
 
-                if nodule_locs:
-                    # 把中文的位置換成病歷用的英文
-                    loc_mapping = {
-                        "左上 (L-upper)": "L-upper lobe", "左中 (L-middle)": "L-middle lobe", "左下 (L-lower)": "L-lower lobe",
-                        "右上 (R-upper)": "R-upper lobe", "右中 (R-middle)": "R-middle lobe", "右下 (R-lower)": "R-lower lobe",
-                        "峽部 (Isthmus)": "isthmus"
-                    }
-                    # 將醫生勾選的所有位置轉換成英文，並用逗號串起來
-                    eng_locs = [loc_mapping[loc] for loc in nodule_locs]
-                    locs_str = ", ".join(eng_locs)
+            # 【步驟 B】設計「新增」與「清空」按鈕
+            c_btn1, c_btn2 = st.columns(2)
+            with c_btn1:
+                if st.button("➕ 新增一顆結節", use_container_width=True):
+                    # 點擊後，往置物櫃裡丟進一個結構字典
+                    st.session_state.thyroid_nodules.append({"loc": "左上 (L-upper)", "nature": "Nodule(s)", "size": 0.5})
+            with c_btn2:
+                if st.button("🗑️ 清空所有結節", use_container_width=True):
+                    st.session_state.thyroid_nodules = []
+
+            # 【步驟 C】動態渲染每一顆結節的獨立輸入框
+            if st.session_state.thyroid_nodules:
+                # 建立位置對照表
+                loc_mapping = {
+                    "左上 (L-upper)": "L-upper lobe", "左中 (L-middle)": "L-middle lobe", "左下 (L-lower)": "L-lower lobe",
+                    "右上 (R-upper)": "R-upper lobe", "右中 (R-middle)": "R-middle lobe", "右下 (R-lower)": "R-lower lobe",
+                    "峽部 (Isthmus)": "isthmus"
+                }
+
+                # 用迴圈把置物櫃裡的每顆結節單獨畫在網頁上
+                for idx, nodule in enumerate(st.session_state.thyroid_nodules):
+                    st.markdown(f"##### 📍 結節 #{idx + 1} 設定：")
                     
-                    # 丟進報告籃子
-                    sono_findings.append(f"{nodule_nature} measuring up to {nodule_size} cm noted at {locs_str}.")
-                else:
-                    # 如果打了勾但沒選位置，給一個保底文字
-                    sono_findings.append(f"{nodule_nature} measuring {nodule_size} cm noted.")
+                    # 將一顆結節的設定並排成三欄
+                    cn1, cn2, cn3 = st.columns([1.5, 1.5, 1])
+                    with cn1:
+                        # 這裡的 key 必須加上 idx (身份證字號)，才不會造成元件衝突
+                        nodule["loc"] = st.selectbox(
+                            f"位置 #{idx + 1}", 
+                            list(loc_mapping.keys()), 
+                            key=f"nod_loc_{idx}"
+                        )
+                    with cn2:
+                        nodule["nature"] = st.selectbox(
+                            f"性質 #{idx + 1}", 
+                            ["Nodule(s)", "Cystic lesion(s)", "Hypoechoic nodule(s)", "Calcified nodule(s)", "Heterogeneous nodule(s)"], 
+                            key=f"nod_nat_{idx}"
+                        )
+                    with cn3:
+                        nodule["size"] = st.number_input(
+                            f"大小 (cm) #{idx + 1}", 
+                            min_value=0.1, max_value=10.0, 
+                            value=nodule["size"], 
+                            step=0.1, 
+                            key=f"nod_sz_{idx}"
+                        )
+                    
+                    # 💡 即時將這顆結節的資料轉成英文，塞進報告籃子 (sono_findings) 裡
+                    eng_loc = loc_mapping[nodule["loc"]]
+                    sono_findings.append(f"A {nodule['nature']} measuring {nodule['size']} cm noted at {eng_loc}.")
+                    
+                    st.caption("---") # 每顆結節中間畫一條淡淡的分隔線
             else:
+                # 如果完全沒有新增結節，給予保底的正常報告文字
                 sono_findings.append("No focal cystic or solid nodule is noted.")
     
     # 6. Assessment & Plan (診斷與計畫)
