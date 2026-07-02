@@ -89,8 +89,8 @@ with col1:
                     ["S1", "S2", "S3", "S4", "S5", "S6", "S7", "S8", "indeterminate region"]
                 )
                 # 建立大小輸入框（預設 1.0 cm，每次加減 0.1）
-                mass_size1 = st.number_input("Mass size L (cm)", min_value=0.1, max_value=20.0, value=1.0, step=0.1, key="mass_size")
-                mass_size2 = st.number_input("Mass size W (cm)", min_value=0.1, max_value=20.0, value=1.0, step=0.1, key="mass_size")
+                mass_size1 = st.number_input("Mass size L (cm)", min_value=0.1, max_value=20.0, value=1.0, step=0.1, key="mass_size1")
+                mass_size2 = st.number_input("Mass size W (cm)", min_value=0.1, max_value=20.0, value=1.0, step=0.1, key="mass_size2")
                 # 自動組合成正式醫學英文病歷
                 sono_findings.append(f"A liver mass measuring about {mass_size1} x {mass_size2} cm at {mass_seg}.")
 
