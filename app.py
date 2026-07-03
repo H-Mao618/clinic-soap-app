@@ -228,8 +228,7 @@ with col1:
             else:
                 # 如果完全沒有新增結節，給予保底的正常報告文字
                 sono_findings.append("No focal cystic or solid nodule is noted.")
-    else:
-        sono_text += "- No perform sono.\n"
+    
     
     # 6. 大腸鏡/胃鏡
     st.subheader("Colonoscope & PES")
