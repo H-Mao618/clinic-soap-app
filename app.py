@@ -162,7 +162,7 @@ with col1:
             with c_btn1:
                 if st.button("➕ 新增一顆結節", use_container_width=True):
                     # 點擊後，往置物櫃裡丟進一個結構字典
-                    st.session_state.thyroid_nodules.append({"loc": "左上 (L-upper)", "nature": "Nodule(s)", "size": 0.5})
+                    st.session_state.thyroid_nodules.append({"loc": "左上 (L-upper)", "nature": "Nodule(s)", "size_1": 0.5, "size_2": 0.5})
             with c_btn2:
                 if st.button("🗑️ 清空所有結節", use_container_width=True):
                     st.session_state.thyroid_nodules = []
@@ -180,7 +180,7 @@ with col1:
                 for idx, nodule in enumerate(st.session_state.thyroid_nodules):
                     st.markdown(f"##### 📍 結節 #{idx + 1} 設定：")
                     
-                    # 將一顆結節的設定並排成三欄
+                    # 將一顆結節的設定並排成四欄
                     cn1, cn2, cn3, cn4 = st.columns([1.5, 1.5, 1, 1])
                     with cn1:
                         # 這裡的 key 必須加上 idx (身份證字號)，才不會造成元件衝突
@@ -197,7 +197,7 @@ with col1:
                         )
                     with cn3:
                         nodule["size_1"] = st.number_input(
-                            f"大小 (cm) #{idx + 1}", 
+                            f"長 (cm) #{idx + 1}", 
                             min_value=0.1, max_value=10.0, 
                             value=nodule["size_1"], 
                             step=0.1, 
@@ -205,7 +205,7 @@ with col1:
                         )
                     with cn4:
                         nodule["size_2"] = st.number_input(
-                            f"大小 (cm) #{idx + 1}", 
+                            f"寬 (cm) #{idx + 1}", 
                             min_value=0.1, max_value=10.0, 
                             value=nodule["size_2"], 
                             step=0.1, 
