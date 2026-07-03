@@ -233,8 +233,8 @@ with col1:
     # 6. 大腸鏡/胃鏡
     st.subheader("Colonoscope & PES")
     endo_type = st.multiselect("Endo type", ["Colonoscope", "PES"])
-    endo_date = st.date_input("檢查日期")
-    endo_date_str = sono_date.strftime('%Y-%m-%d')
+    endo_date = st.date_input("鏡檢檢查日期")
+    endo_date_str = endo_date.strftime('%Y-%m-%d')
 
 
 # 在右側即時組合並顯示病歷
