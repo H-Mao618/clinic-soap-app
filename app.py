@@ -228,9 +228,12 @@ with col1:
             else:
                 # 如果完全沒有新增結節，給予保底的正常報告文字
                 sono_findings.append("No focal cystic or solid nodule is noted.")
+    else:
+        sono_text += "- No perform sono.\n"
     
-    # 6. Assessment & Plan (診斷與計畫)
-    st.subheader("Assessment & Plan (A/P)")
+    # 6. 大腸鏡/胃鏡
+    st.subheader("Colonoscope & PES")
+    endo_type = 
 
 
 # 在右側即時組合並顯示病歷
@@ -238,7 +241,7 @@ with col2:
     st.header("📝 產出報告區")
 
     # 🌟 建立兩個分頁：一個放 SOAP，一個放 Sono 報告
-    tab_soap, tab_sono = st.tabs(["📄 門診病歷 (SOAP)", "📊 超音波報告 (Sono Report)"])
+    tab_soap, tab_sono, tab_endo = st.tabs(["📄 門診病歷 (SOAP)", "📊 超音波報告 (Sono Report)", "腸胃鏡報告"])
     
     with tab_soap:
         st.write("您可以直接複製下方文字貼回 HIS 的 SOAP 欄位：")
@@ -294,7 +297,7 @@ with col2:
             soap_text += "- Routine follow up.\n"
 
         # 在網頁上呈現一個方便複製的文字框
-        st.text_area("SOAP Output (可直接複製)", value=soap_text, height=400)
+        st.text_area("SOAP Output", value=soap_text, height=400)
 
     with tab_sono:
         st.write("您可以直接複製下方文字貼回 HIS 的 SONO 欄位：")
@@ -308,4 +311,18 @@ with col2:
             sono_text += "- No remarkable abnormality noted.\n"
         
         # 在網頁上呈現一個方便複製的文字框
-        st.text_area("SONO Output (可直接複製)", value=sono_text, height=400)
+        st.text_area("SONO Output", value=sono_text, height=400)
+    
+    with tab_endo:
+        st.write("您可以直接複製下方文字貼回 HIS 的 ENDOSCOPE 欄位：")
+        endo_text = ""
+        endo_text += f"{endo_date_str}, {sono_type}.\n"
+        
+        if sono_findings:
+            for finding in sono_findings:
+                sono_text += f"- {finding}\n"
+        else:
+            sono_text += "- No remarkable abnormality noted.\n"
+        
+        # 在網頁上呈現一個方便複製的文字框
+        st.text_area("Colonoscope/PES Output", value=sono_text, height=400)
