@@ -181,7 +181,7 @@ with col1:
                     st.markdown(f"##### 📍 結節 #{idx + 1} 設定：")
                     
                     # 將一顆結節的設定並排成三欄
-                    cn1, cn2, cn3 = st.columns([1.5, 1.5, 1])
+                    cn1, cn2, cn3, cn4 = st.columns([1.5, 1.5, 1, 1])
                     with cn1:
                         # 這裡的 key 必須加上 idx (身份證字號)，才不會造成元件衝突
                         nodule["loc"] = st.selectbox(
@@ -196,17 +196,26 @@ with col1:
                             key=f"nod_nat_{idx}"
                         )
                     with cn3:
-                        nodule["size"] = st.number_input(
+                        nodule["size_1"] = st.number_input(
                             f"大小 (cm) #{idx + 1}", 
                             min_value=0.1, max_value=10.0, 
-                            value=nodule["size"], 
+                            value=nodule["size_1"], 
                             step=0.1, 
-                            key=f"nod_sz_{idx}"
+                            key=f"nod_sz1_{idx}"
                         )
+                    with cn4:
+                        nodule["size_2"] = st.number_input(
+                            f"大小 (cm) #{idx + 1}", 
+                            min_value=0.1, max_value=10.0, 
+                            value=nodule["size_2"], 
+                            step=0.1, 
+                            key=f"nod_sz2_{idx}"
+                        )
+
                     
                     # 💡 即時將這顆結節的資料轉成英文，塞進報告籃子 (sono_findings) 裡
                     eng_loc = loc_mapping[nodule["loc"]]
-                    sono_findings.append(f"A {nodule['nature']} measuring {nodule['size']} cm noted at {eng_loc}.")
+                    sono_findings.append(f"A {nodule['nature']} measuring {nodule['size_1']} x {nodule['size_2']} cm noted at {eng_loc}.")
                     
                     st.caption("---") # 每顆結節中間畫一條淡淡的分隔線
             else:
