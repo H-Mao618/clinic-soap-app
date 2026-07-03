@@ -1,9 +1,9 @@
 import streamlit as st
 
 # 設定網頁標題
-st.set_page_config(page_title="門診病歷快速生成器", layout="wide")
-st.title("🩺 門診病歷快速生成器 (SOAP)")
-st.caption("本機端單機運行，100% 確保病患隱私安全")
+st.set_page_config(page_title="門診病歷生成", layout="wide")
+st.title("🩺 門診病歷生成 (SOAP)")
+st.caption("本機端單機運行")
 
 # 使用 Streamlit 的左右分欄功能
 col1, col2 = st.columns([1, 1])
@@ -68,7 +68,7 @@ with col1:
     if do_sono:
         sono_type = st.selectbox("Select Sono type", ["Abdominal sono", "Thyroid sono", "Breast sono"])
         if sono_type == "Abdominal sono":
-            findings_abd = st.multiselect("請勾選腹部超音波異常發現", ["Fatty liver change", "Liver mass", "GB stone", "GB wall thickening", "Kidney stone"])
+            findings_abd = st.multiselect("請勾選腹部超音波異常發現", ["Fatty liver change", "Liver mass", "GB stone", "GB wall thickening", "Kidney stone", "Hydronephrosis"])
             
             if "Fatty liver change" in findings_abd:
                 fatty_liver_grade = st.selectbox("Select grade", ["Mild", "Moderate", "Severe"])
@@ -99,7 +99,7 @@ with col1:
                 st.caption("↳ Gallbladder stone 詳細設定：")
                 gb_stone_size = st.number_input("Stone size (cm)", min_value=0.1, max_value=10.0, value=1.0, step=0.1, key="gb_stone")
                 
-                sono_findings.append(f"A GB stone about {gb_stone_size} cm.")
+                sono_findings.append(f"GB stone about {gb_stone_size} cm.")
             else: sono_findings.append("No GB stone.")
 
             # --- 4. GB wall thickening 邏輯 (輸入厚度) ---
@@ -123,6 +123,13 @@ with col1:
                     sono_findings.append(f"Bilateral renal stones, largest {ks_size} cm.")
                 else:
                     sono_findings.append(f"{ks_side} renal stone {ks_size} cm.")
+            if "Hydronephrosis" in findings_abd:
+                st.caption("↳ Hydronephrosis 詳細設定：")
+                # 選擇左側、右側或雙側
+                hydro_side = st.selectbox("Select Side", ["Right", "Left", "Bilateral"])
+                sono_findings.append(f"{hydro_side} hydornephrosis.")
+
+        
         if sono_type == "Thyroid sono":
             st.write("### 🦋 甲狀腺超音波紀錄")
             
