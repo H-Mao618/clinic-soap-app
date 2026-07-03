@@ -233,7 +233,9 @@ with col1:
     
     # 6. 大腸鏡/胃鏡
     st.subheader("Colonoscope & PES")
-    endo_type = 
+    endo_type = st.multiselect("Endo type", ["Colonoscope", "PES"])
+    endo_date = st.date_input("檢查日期")
+    endo_date_str = sono_date.strftime('%Y-%m-%d')
 
 
 # 在右側即時組合並顯示病歷
@@ -316,7 +318,7 @@ with col2:
     with tab_endo:
         st.write("您可以直接複製下方文字貼回 HIS 的 ENDOSCOPE 欄位：")
         endo_text = ""
-        endo_text += f"{endo_date_str}, {sono_type}.\n"
+        endo_text += f"{endo_date_str}, {endo_type}.\n"
         
         if sono_findings:
             for finding in sono_findings:
