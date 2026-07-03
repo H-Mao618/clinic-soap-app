@@ -319,11 +319,7 @@ with col2:
         endo_text = ""
         endo_text += f"{endo_date_str}, {endo_type}.\n"
         
-        if sono_findings:
-            for finding in sono_findings:
-                sono_text += f"- {finding}\n"
-        else:
-            sono_text += "- No remarkable abnormality noted.\n"
+        
         
         # 在網頁上呈現一個方便複製的文字框
         st.text_area("Colonoscope/PES Output", value=sono_text, height=400)
