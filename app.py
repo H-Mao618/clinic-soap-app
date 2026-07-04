@@ -236,6 +236,20 @@ with col1:
     endo_date = st.date_input("鏡檢檢查日期")
     endo_date_str = endo_date.strftime('%Y-%m-%d')
 
+    if "colonoscope" in endo_type:
+        if "colon_polyp" not in st.session_state:
+            st.session_state.colon_polyps = []
+
+        polyp_btn1, polyp_btn2 = st.columns(2)
+        with polyp_btn1:
+            if st.button("➕ 新增一顆瘜肉", use_container_width=True):
+                    # 點擊後，往置物櫃裡丟進一個結構字典
+                st.session_state.colon_polyps.append({"loc": "左上 (L-upper)", "nature": "Nodule(s)", "size_1": 0.5, "size_2": 0.5})
+        with polyp_btn2:
+            if st.button("🗑️ 清空所有瘜肉", use_container_width=True):
+                st.session_state.colon_polyps = []
+    
+    if "PES" in endo_type:
 
 # 在右側即時組合並顯示病歷
 with col2:
