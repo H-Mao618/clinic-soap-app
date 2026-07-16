@@ -249,7 +249,7 @@ with col1:
             if st.button("🗑️ 清空所有瘜肉", use_container_width=True):
                 st.session_state.colon_polyps = []
     
-    if "PES" in endo_type:
+    
 
 # 在右側即時組合並顯示病歷
 with col2:
