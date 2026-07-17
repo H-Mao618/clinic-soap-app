@@ -236,6 +236,8 @@ with col1:
     endo_date = st.date_input("鏡檢檢查日期")
     endo_date_str = endo_date.strftime('%Y-%m-%d')
 
+    colonoscope_findings = []
+    
     if "Colonoscope" in endo_type:
         if "colon_polyp" not in st.session_state:
             st.session_state.colon_polyps = []
