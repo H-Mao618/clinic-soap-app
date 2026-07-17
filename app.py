@@ -236,7 +236,7 @@ with col1:
     endo_date = st.date_input("鏡檢檢查日期")
     endo_date_str = endo_date.strftime('%Y-%m-%d')
 
-    if "colonoscope" in endo_type:
+    if "Colonoscope" in endo_type:
         if "colon_polyp" not in st.session_state:
             st.session_state.colon_polyps = []
 
@@ -244,11 +244,55 @@ with col1:
         with polyp_btn1:
             if st.button("➕ 新增一顆瘜肉", use_container_width=True):
                     # 點擊後，往置物櫃裡丟進一個結構字典
-                st.session_state.colon_polyps.append({"loc": "左上 (L-upper)", "nature": "Nodule(s)", "size_1": 0.5, "size_2": 0.5})
+                st.session_state.colon_polyps.append({"loc": "盲腸(Cecum)", "nature": "Sessile Polyp", "size": 0.5})
         with polyp_btn2:
             if st.button("🗑️ 清空所有瘜肉", use_container_width=True):
                 st.session_state.colon_polyps = []
-    
+        
+        if st.session_state.colon_polyps:
+                # 建立位置對照表
+                locofpolyp_mapping = {
+                    "盲腸 (Cecum)": "Cecum", "升結腸 (A-Colon)": "Ascending Colon", "橫結腸 (T-Colon)": "Transverse Colon",
+                    "降結腸 (D-Colon)": "Descending Colon", "乙狀結腸 (S-Colon)": "Sigmoid Colon", "直腸 (Rectum)": "Rectum",
+                }
+
+                # 用迴圈把置物櫃裡的每顆瘜肉單獨畫在網頁上
+                for idx, polyp in enumerate(st.session_state.colon_polyps):
+                    st.markdown(f"##### 📍 瘜肉 #{idx + 1} 設定：")
+                    
+                    # 將一顆瘜肉的設定並排成三欄
+                    po1, po2, po3 = st.columns([1.5, 1.5, 1.5])
+                    with po1:
+                        # 這裡的 key 必須加上 idx (身份證字號)，才不會造成元件衝突
+                        polyp["loc"] = st.selectbox(
+                            f"位置 #{idx + 1}", 
+                            list(locofpolyp_mapping.keys()), 
+                            key=f"polyp_loc_{idx}"
+                        )
+                    with po2:
+                        polyp["nature"] = st.selectbox(
+                            f"性質 #{idx + 1}", 
+                            ["Sessil Polyp", "Flat Polyp", "Pedunculated Polyp"], 
+                            key=f"polyp_nat_{idx}"
+                        )
+                    with po3:
+                        polyp["size"] = st.number_input(
+                            f"大小 (cm) #{idx + 1}", 
+                            min_value=0.1, max_value=10.0, 
+                            value=polyp["size"], 
+                            step=0.1, 
+                            key=f"polyp_sz_{idx}"
+                        )
+
+                    
+                    # 💡 即時將這顆瘜肉的資料轉成英文，塞進報告籃子 (colonoscope_findings) 裡
+                    engofpolyp_loc = locofpolyp_mapping[polyp["loc"]]
+                    colonoscope_findings.append(f"A {engofpolyp_loc} {polyp["nature"]} measuring {polyp["size"]} cm.")
+                    
+                    st.caption("---") # 每顆結節中間畫一條淡淡的分隔線
+            else:
+                # 如果完全沒有新增瘜肉，給予保底的正常報告文字
+                colonoscope_findings.append("No obvious polyp is noted.")
     
 
 # 在右側即時組合並顯示病歷
@@ -333,7 +377,11 @@ with col2:
         endo_text = ""
         endo_text += f"{endo_date_str}, {endo_type}.\n"
         
-        
+        if colonoscope_findings:
+            for finding in colonoscope_findings:
+                endo_text += f"- {finding}\n"
+        else:
+            endo_text += "- No remarkable abnormality noted.\n"
         
         # 在網頁上呈現一個方便複製的文字框
         st.text_area("Colonoscope/PES Output", value=sono_text, height=400)
