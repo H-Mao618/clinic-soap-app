@@ -290,9 +290,9 @@ with col1:
                     colonoscope_findings.append(f"A {engofpolyp_loc} {polyp["nature"]} measuring {polyp["size"]} cm.")
                     
                     st.caption("---") # 每顆結節中間畫一條淡淡的分隔線
-            else:
-                # 如果完全沒有新增瘜肉，給予保底的正常報告文字
-                colonoscope_findings.append("No obvious polyp is noted.")
+        else:
+            # 如果完全沒有新增瘜肉，給予保底的正常報告文字
+            colonoscope_findings.append("No obvious polyp is noted.")
     
 
 # 在右側即時組合並顯示病歷
