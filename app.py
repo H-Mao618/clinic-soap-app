@@ -246,7 +246,7 @@ with col1:
         with polyp_btn1:
             if st.button("➕ 新增一顆瘜肉", use_container_width=True):
                     # 點擊後，往置物櫃裡丟進一個結構字典
-                st.session_state.colon_polyp.append({"loc": "盲腸 (Cecum)", "nature": "Sessile Polyp", "size": 0.5})
+                st.session_state.colon_polyp.append({"aav": 10, "loc": "盲腸 (Cecum)", "nature": "Sessile Polyp", "size": 0.5})
         with polyp_btn2:
             if st.button("🗑️ 清空所有瘜肉", use_container_width=True):
                 st.session_state.colon_polyp = []
