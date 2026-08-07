@@ -267,9 +267,9 @@ with col1:
                     with po1:
                         polyp["aav"] = st.number_input(
                             f"深度 (cm) #{idx + 1}", 
-                            min_value=1.0, max_value=160.0, 
-                            value=polyp["aav"], 
-                            step=1.0, 
+                            min_value=1, max_value=160, 
+                            value=int(polyp["aav"]), 
+                            step=1, 
                             key=f"polyp_aav_{idx}"
                         )
                     with po2:
