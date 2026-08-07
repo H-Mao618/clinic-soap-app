@@ -265,10 +265,10 @@ with col1:
                     # 將一顆瘜肉的設定並排成四欄
                     po1, po2, po3, po4 = st.columns([1.5, 1.5, 1.5, 1.5])
                     with po1:
-                        polyp["AAV"] = st.number_input(
+                        polyp["aav"] = st.number_input(
                             f"深度 (cm) #{idx + 1}", 
                             min_value=1.0, max_value=160.0, 
-                            value=polyp["AAV"], 
+                            value=polyp["aav"], 
                             step=1.0, 
                             key=f"polyp_aav_{idx}"
                         )
