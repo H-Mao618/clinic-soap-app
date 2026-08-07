@@ -240,18 +240,18 @@ with col1:
     
     if "Colonoscope" in endo_type:
         if "colon_polyp" not in st.session_state:
-            st.session_state.colon_polyps = []
+            st.session_state.colon_polyp = []
 
         polyp_btn1, polyp_btn2 = st.columns(2)
         with polyp_btn1:
             if st.button("➕ 新增一顆瘜肉", use_container_width=True):
                     # 點擊後，往置物櫃裡丟進一個結構字典
-                st.session_state.colon_polyps.append({"loc": "盲腸(Cecum)", "nature": "Sessile Polyp", "size": 0.5})
+                st.session_state.colon_polyp.append({"loc": "盲腸 (Cecum)", "nature": "Sessile Polyp", "size": 0.5})
         with polyp_btn2:
             if st.button("🗑️ 清空所有瘜肉", use_container_width=True):
-                st.session_state.colon_polyps = []
+                st.session_state.colon_polyp = []
         
-        if st.session_state.colon_polyps:
+        if st.session_state.colon_polyp:
                 # 建立位置對照表
                 locofpolyp_mapping = {
                     "盲腸 (Cecum)": "Cecum", "升結腸 (A-Colon)": "Ascending Colon", "橫結腸 (T-Colon)": "Transverse Colon",
@@ -259,7 +259,7 @@ with col1:
                 }
 
                 # 用迴圈把置物櫃裡的每顆瘜肉單獨畫在網頁上
-                for idx, polyp in enumerate(st.session_state.colon_polyps):
+                for idx, polyp in enumerate(st.session_state.colon_polyp):
                     st.markdown(f"##### 📍 瘜肉 #{idx + 1} 設定：")
                     
                     # 將一顆瘜肉的設定並排成三欄
@@ -274,7 +274,7 @@ with col1:
                     with po2:
                         polyp["nature"] = st.selectbox(
                             f"性質 #{idx + 1}", 
-                            ["Sessil Polyp", "Flat Polyp", "Pedunculated Polyp"], 
+                            ["Sessile Polyp", "Flat Polyp", "Pedunculated Polyp"], 
                             key=f"polyp_nat_{idx}"
                         )
                     with po3:
@@ -289,7 +289,7 @@ with col1:
                     
                     # 💡 即時將這顆瘜肉的資料轉成英文，塞進報告籃子 (colonoscope_findings) 裡
                     engofpolyp_loc = locofpolyp_mapping[polyp["loc"]]
-                    colonoscope_findings.append(f"A {engofpolyp_loc} {polyp["nature"]} measuring {polyp["size"]} cm.")
+                    colonoscope_findings.append(f"A {engofpolyp_loc} {polyp['nature']} measuring {polyp['size']} cm.")
                     
                     st.caption("---") # 每顆結節中間畫一條淡淡的分隔線
         else:
