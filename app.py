@@ -297,7 +297,7 @@ with col1:
                     
                     # 💡 即時將這顆瘜肉的資料轉成英文，塞進報告籃子 (colonoscope_findings) 裡
                     engofpolyp_loc = locofpolyp_mapping[polyp["loc"]]
-                    colonoscope_findings.append(f"{polyp['AAV']} cm, {engofpolyp_loc} {polyp['nature']}, size {polyp['size']} cm.")
+                    colonoscope_findings.append(f"{polyp['aav']} cm, {engofpolyp_loc} {polyp['nature']}, size {polyp['size']} cm.")
                     
                     st.caption("---") # 每顆結節中間畫一條淡淡的分隔線
         else:
