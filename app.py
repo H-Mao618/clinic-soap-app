@@ -386,4 +386,4 @@ with col2:
             endo_text += "- No remarkable abnormality noted.\n"
         
         # 在網頁上呈現一個方便複製的文字框
-        st.text_area("Colonoscope/PES Output", value=sono_text, height=400)
+        st.text_area("Colonoscope/PES Output", value=endo_text, height=400)
