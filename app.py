@@ -262,22 +262,30 @@ with col1:
                 for idx, polyp in enumerate(st.session_state.colon_polyp):
                     st.markdown(f"##### 📍 瘜肉 #{idx + 1} 設定：")
                     
-                    # 將一顆瘜肉的設定並排成三欄
-                    po1, po2, po3 = st.columns([1.5, 1.5, 1.5])
+                    # 將一顆瘜肉的設定並排成四欄
+                    po1, po2, po3, po4 = st.columns([1.5, 1.5, 1.5, 1.5])
                     with po1:
+                        polyp["AAV"] = st.number_input(
+                            f"深度 (cm) #{idx + 1}", 
+                            min_value=1.0, max_value=160.0, 
+                            value=polyp["AAV"], 
+                            step=1.0, 
+                            key=f"polyp_aav_{idx}"
+                        )
+                    with po2:
                         # 這裡的 key 必須加上 idx (身份證字號)，才不會造成元件衝突
                         polyp["loc"] = st.selectbox(
                             f"位置 #{idx + 1}", 
                             list(locofpolyp_mapping.keys()), 
                             key=f"polyp_loc_{idx}"
                         )
-                    with po2:
+                    with po3:
                         polyp["nature"] = st.selectbox(
                             f"性質 #{idx + 1}", 
                             ["Sessile Polyp", "Flat Polyp", "Pedunculated Polyp"], 
                             key=f"polyp_nat_{idx}"
                         )
-                    with po3:
+                    with po4:
                         polyp["size"] = st.number_input(
                             f"大小 (cm) #{idx + 1}", 
                             min_value=0.1, max_value=10.0, 
@@ -289,7 +297,7 @@ with col1:
                     
                     # 💡 即時將這顆瘜肉的資料轉成英文，塞進報告籃子 (colonoscope_findings) 裡
                     engofpolyp_loc = locofpolyp_mapping[polyp["loc"]]
-                    colonoscope_findings.append(f"A {engofpolyp_loc} {polyp['nature']} measuring {polyp['size']} cm.")
+                    colonoscope_findings.append(f"{polyp['AAV']} cm, {engofpolyp_loc} {polyp['nature']}, size {polyp['size']} cm.")
                     
                     st.caption("---") # 每顆結節中間畫一條淡淡的分隔線
         else:
